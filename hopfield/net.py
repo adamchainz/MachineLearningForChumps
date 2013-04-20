@@ -6,15 +6,14 @@ class HopfieldNet(object):
     def __init__(self, num_nodes):
         self.num_nodes = num_nodes
         self.nodes = numpy.zeros(num_nodes, dtype=numpy.int8)
+        self.biases = numpy.zeros(num_nodes, dtype=numpy.int8)
         self.weights = numpy.zeros(num_nodes * num_nodes, dtype=numpy.int8)
 
     def get_node(self, which):
         return bool(self.nodes[which])
 
     def set_node(self, which, state):
-        current = self.get_node(which)
         self.nodes[which] = state
-        return (current != state)
 
     def set_nodes(self, states):
         assert len(states) == self.num_nodes
@@ -23,6 +22,12 @@ class HopfieldNet(object):
 
     def get_nodes(self):
         return [self.get_node(i) for i in xrange(self.num_nodes)]
+
+    def get_node_bias(self, which):
+        return self.biases[which]
+
+    def set_node_bias(self, which, bias):
+        self.biases[which] = bias
 
     def get_weight(self, i, j):
         if i > j:
@@ -35,9 +40,6 @@ class HopfieldNet(object):
             i, j = j, i
 
         self.weights[j * self.num_nodes + i] = weight
-
-    def get_node_bias(self, which):
-        return 0
 
     def get_node_energy_gap(self, which):
         return (
