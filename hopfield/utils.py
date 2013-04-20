@@ -1,8 +1,13 @@
 # coding=utf-8
+import numpy
 
 
 def binary_array(ones_zeros):
-    return [digit == '1' for digit in ones_zeros]
+    array = numpy.zeros(len(ones_zeros), dtype=numpy.int8)
+    for i, digit in enumerate(reversed(ones_zeros)):
+        if digit == '1':
+            array[i] = 1
+    return array
 
 
 def string_to_binary_array(string):

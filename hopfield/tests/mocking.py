@@ -16,8 +16,8 @@ def padded(binary_array, num_digits):
 
 def all_binary_arrays(num_digits):
     for i in xrange(2 ** num_digits):
-        arr = binary_array(bin(i)[2:])
-        yield padded(arr, num_digits)
+        string = bin(i)[2:].rjust(num_digits, '0')
+        yield binary_array(string)
 
 
 def make_net_from_lecture_slides():
