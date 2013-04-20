@@ -12,7 +12,9 @@ class HopfieldNet(object):
         return self.nodes[which - 1]
 
     def set_node(self, which, state):
+        current = self.get_node(which)
         self.nodes[which - 1] = state
+        return (current != state)
 
     def set_nodes(self, states):
         assert len(states) == self.num_nodes
