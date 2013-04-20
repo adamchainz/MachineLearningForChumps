@@ -13,7 +13,11 @@ class UtilsTests(HopfieldTestCase):
         )
 
     def test_string_to_binary_array(self):
+        bin_dog = string_to_binary_array('dog')
+
+        self.assertEqual(len(bin_dog), 24)
+
         self.assertArrayEqual(
-            string_to_binary_array('dog'),
+            bin_dog,
             [0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1]
         )

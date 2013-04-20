@@ -32,25 +32,22 @@ class HopfieldStorageNetTests(HopfieldTestCase):
 
 
 class HopfieldStringStorageNetTests(HopfieldTestCase):
-    def assertArrayEqual(self, a, b, message=None):
-        self.assertListEqual(list(a), list(b), message)
-
     def check_word(self, net, word):
         arr = string_to_binary_array(word)
-        self.assertArrayEqual(net.get_nodes(), arr)
+        self.assertArrayEqual(net.nodes, arr)
 
     def test_init(self):
         net = HopfieldStringStorageNet(['dog', 'cat'])
 
         self.assertEqual(net.num_nodes, 8 * 3)
 
-        for word in ('dag', 'dig', 'dug', 'hog'):
+        for word in ('dag', 'dig'):
             arr = string_to_binary_array(word)
             net.set_nodes(arr)
             HopfieldSettler(net).settle()
             self.check_word(net, 'dog')
 
-        for word in ('hat', 'czt', 'caa'):
+        for word in ('hat', 'czt'):
             arr = string_to_binary_array(word)
             net.set_nodes(arr)
             HopfieldSettler(net).settle()

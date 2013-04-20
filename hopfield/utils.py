@@ -12,6 +12,6 @@ def binary_array(ones_zeros):
 
 def string_to_binary_array(string):
     return binary_array(
-        ''.join(['%08d' % int(bin(ord(i))[2:])
+        ''.join([bin(ord(i))[2:].rjust(8, '0')
                  for i in string])
     )
