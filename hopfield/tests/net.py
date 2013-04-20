@@ -1,12 +1,11 @@
 # coding=utf-8
-import unittest
-
 from ..net import HopfieldNet
 
+from bases import HopfieldTestCase
 from mocking import make_net_from_lecture_slides
 
 
-class HopfieldNetTests(unittest.TestCase):
+class HopfieldNetTests(HopfieldTestCase):
     def test_weight_setting(self):
         net = HopfieldNet(num_nodes=2)
         net.set_weight(0, 1, weight=4)

@@ -1,14 +1,13 @@
 # coding=utf-8
-import unittest
-
 from ..settler import HopfieldSettler
 from ..storage import HopfieldStorageNet, HopfieldStringStorageNet
 from ..utils import binary_array, string_to_binary_array
 
+from bases import HopfieldTestCase
 from mocking import all_binary_arrays
 
 
-class HopfieldStorageNetTests(unittest.TestCase):
+class HopfieldStorageNetTests(HopfieldTestCase):
     def test_init_with_bad_lengths_impossible(self):
         memories = [
             binary_array('01'),
@@ -32,10 +31,13 @@ class HopfieldStorageNetTests(unittest.TestCase):
             self.assertIn(str(net.nodes), strung_up_memories)
 
 
-class HopfieldStringStorageNetTests(unittest.TestCase):
+class HopfieldStringStorageNetTests(HopfieldTestCase):
+    def assertArrayEqual(self, a, b, message=None):
+        self.assertListEqual(list(a), list(b), message)
+
     def check_word(self, net, word):
         arr = string_to_binary_array(word)
-        self.assertItemsEqual(net.get_nodes(), arr)
+        self.assertArrayEqual(net.get_nodes(), arr)
 
     def test_init(self):
         net = HopfieldStringStorageNet(['dog', 'cat'])

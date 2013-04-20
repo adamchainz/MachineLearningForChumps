@@ -1,12 +1,11 @@
 # coding=utf-8
-import unittest
-
 from ..settler import HopfieldSettler
 
+from bases import HopfieldTestCase
 from mocking import make_net_from_lecture_slides
 
 
-class HopfieldSettlerTests(unittest.TestCase):
+class HopfieldSettlerTests(HopfieldTestCase):
 
     def test_at_energy_minimum(self):
         net = make_net_from_lecture_slides()
