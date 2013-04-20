@@ -9,7 +9,7 @@ class HopfieldNet(object):
         self.weights = numpy.zeros(num_nodes * num_nodes, dtype=numpy.int8)
 
     def get_node(self, which):
-        return self.nodes[which - 1]
+        return bool(self.nodes[which - 1])
 
     def set_node(self, which, state):
         current = self.get_node(which)
@@ -20,6 +20,9 @@ class HopfieldNet(object):
         assert len(states) == self.num_nodes
         for i, state in enumerate(states, 1):
             self.set_node(i, state)
+
+    def get_nodes(self):
+        return [self.get_node(i) for i in xrange(1, self.num_nodes + 1)]
 
     def get_weight(self, i, j):
         if i > j:

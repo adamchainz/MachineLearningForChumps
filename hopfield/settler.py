@@ -2,7 +2,7 @@
 import random
 
 
-class HopfieldTrainer(object):
+class HopfieldSettler(object):
     def __init__(self, net):
         self.net = net
 
@@ -14,6 +14,10 @@ class HopfieldTrainer(object):
                 break
 
     def do_a_round(self):
+        """
+        Because we are updating probabilistically, we must guess that we are
+        near a minimum by recording a streak of non-movement in energy.
+        """
         energy_streak = 0
         previous_energy = self.net.get_total_energy()
 
@@ -34,28 +38,27 @@ class HopfieldTrainer(object):
 
     def update_random_node(self):
         which = random.randint(1, self.net.num_nodes)
-        self.update_node(which)
-
-    def update_node(self, which):
-        energy_gap = self.net.get_node_energy_gap(which)
-
-        if energy_gap < 0:
-            return self.net.set_node(which, False)
-        elif energy_gap > 0:
-            return self.net.set_node(which, True)
-        else:
-            return False
+        state = self.get_node_desired_state(which)
+        self.net.set_node(which, state)
 
     def at_energy_minimum(self):
         """
-        To determine if we are at a minimum from where we are, we should try to
-        update each node once - if we can update it, it means we aren't, so we
-        should continue updating randomly.
-
-        NB could be fairer by iterating across all nodes randomly.
+        We are at the minimum if updating any single node would only make the
+        energy higher - although it may be a local as opposed to global
+        minimum.
         """
         for i in xrange(self.net.num_nodes):
-            if self.update_node(i):
+            if self.could_update_node(i):
                 return False
 
         return True
+
+    def could_update_node(self, which):
+        return self.get_node_desired_state() != self.net.get_node(which)
+
+    def get_node_desired_state(self, which):
+        energy_gap = self.net.get_node_energy_gap(which)
+        if energy_gap < 0:
+            return False
+        else:
+            return True
