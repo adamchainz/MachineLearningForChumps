@@ -37,7 +37,7 @@ class HopfieldSettler(object):
             self.update_random_node()
 
     def update_random_node(self):
-        which = random.randint(1, self.net.num_nodes)
+        which = random.randint(0, self.net.num_nodes - 1)
         state = self.get_node_desired_state(which)
         self.net.set_node(which, state)
 
@@ -54,7 +54,7 @@ class HopfieldSettler(object):
         return True
 
     def could_update_node(self, which):
-        return self.get_node_desired_state() != self.net.get_node(which)
+        return self.get_node_desired_state(which) != self.net.get_node(which)
 
     def get_node_desired_state(self, which):
         energy_gap = self.net.get_node_energy_gap(which)
