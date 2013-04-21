@@ -8,50 +8,25 @@ class HopfieldSettler(object):
 
     def settle(self):
         while True:
-            self.do_a_round()
+            updatable = self.find_updatable()
 
-            if self.at_energy_minimum():
-                break
-
-    def do_a_round(self):
-        """
-        Because we are updating probabilistically, we must guess that we are
-        near a minimum by recording a streak of non-movement in energy.
-        """
-        energy_streak = 0
-        previous_energy = self.net.get_total_energy()
-
-        while True:
-            current_energy = self.net.get_total_energy()
-
-            if current_energy == previous_energy:
-                energy_streak += 1
+            if len(updatable) == 0:
+                return
             else:
-                energy_streak = 0
+                self.update_one_of(updatable)
 
-            if energy_streak >= 5:
-                break
+    def find_updatable(self):
+        updatable = []
+        for which in xrange(self.net.num_nodes):
+            if self.could_update_node(which):
+                updatable.append(which)
+        return updatable
 
-            previous_energy = current_energy
-
-            self.update_random_node()
-
-    def update_random_node(self):
-        which = random.randint(0, self.net.num_nodes - 1)
+    def update_one_of(self, updatable):
+        i = random.randint(0, len(updatable) - 1)
+        which = updatable[i]
         state = self.get_node_desired_state(which)
         self.net.set_node(which, state)
-
-    def at_energy_minimum(self):
-        """
-        We are at the minimum if updating any single node would only make the
-        energy higher - although it may be a local as opposed to global
-        minimum.
-        """
-        for i in xrange(self.net.num_nodes):
-            if self.could_update_node(i):
-                return False
-
-        return True
 
     def could_update_node(self, which):
         return self.get_node_desired_state(which) != self.net.get_node(which)

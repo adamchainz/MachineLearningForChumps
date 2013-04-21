@@ -7,12 +7,10 @@ from mocking import make_net_from_lecture_slides
 
 class HopfieldSettlerTests(HopfieldTestCase):
 
-    def test_at_energy_minimum(self):
+    def test_find_updatable(self):
         net = make_net_from_lecture_slides()
-        settler = HopfieldSettler(net)
-        self.assertFalse(settler.at_energy_minimum())
-        HopfieldSettler(net).settle()
-        self.assertTrue(settler.at_energy_minimum())
+        updatable = HopfieldSettler(net).find_updatable()
+        self.assertItemsEqual(updatable, [3, 4])
 
     def test_finding_deep_minimum(self):
         net = make_net_from_lecture_slides()
