@@ -27,9 +27,16 @@ class HopfieldStorageNet(HopfieldNet):
 
 class HopfieldStringStorageNet(HopfieldStorageNet):
     def __init__(self, strings):
+        self._normalize_string_arrays(strings)
         memories = [
             string_to_binary_array(string)
             for string in strings
         ]
         super(HopfieldStringStorageNet, self).__init__(memories)
 
+    def _normalize_string_arrays(self, strings):
+        # Pads with '.'
+        max_length = max([len(x) for x in strings])
+        for i, string in enumerate(strings):
+            if len(string) < max_length:
+                strings[i] = string.ljust(max_length, '.')

@@ -52,3 +52,14 @@ class HopfieldStringStorageNetTests(HopfieldTestCase):
             net.set_nodes(arr)
             HopfieldSettler(net).settle()
             self.check_word(net, 'cat')
+
+    def test_normalization(self):
+        net = HopfieldStringStorageNet(['b', '!!'])
+
+        self.assertEqual(net.num_nodes, 8 * 2)
+
+        for word in ('b,', 'b0'):
+            arr = string_to_binary_array(word)
+            net.set_nodes(arr)
+            HopfieldSettler(net).settle()
+            self.check_word(net, 'b.')
