@@ -1,5 +1,6 @@
 # coding=utf-8
 from ..settler import HopfieldSettler
+from ..utils import binary_array
 
 from bases import HopfieldTestCase
 from mocking import make_net_from_lecture_slides
@@ -18,4 +19,4 @@ class HopfieldSettlerTests(HopfieldTestCase):
         net.set_nodes([False, True, False, True, True])
         HopfieldSettler(net).settle()
         self.assertEqual(net.get_total_energy(), -5)
-        self.assertEqual(net.get_nodes(), [False, True, False, True, True])
+        self.assertArrayEqual(net.get_nodes(), binary_array('01011'))
