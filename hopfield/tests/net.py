@@ -17,14 +17,14 @@ class HopfieldNetTests(HopfieldTestCase):
 
     def test_node_setting(self):
         net = HopfieldNet(num_nodes=2)
-        self.assertEqual(net.get_node(0), False)
+        self.assertEqual(net.nodes[0], False)
 
         net.set_node(0, True)
-        self.assertEqual(net.get_node(0), True)
+        self.assertEqual(net.nodes[0], True)
         net.set_node(0, True)
 
         net.set_node(0, False)
-        self.assertEqual(net.get_node(0), False)
+        self.assertEqual(net.nodes[0], False)
         net.set_node(0, False)
 
     def test_node_bias_setting(self):
@@ -38,8 +38,8 @@ class HopfieldNetTests(HopfieldTestCase):
         net = HopfieldNet(num_nodes=2)
 
         net.set_nodes([True, False])
-        self.assertTrue(net.get_node(0))
-        self.assertFalse(net.get_node(1))
+        self.assertTrue(net.nodes[0])
+        self.assertFalse(net.nodes[1])
 
         with self.assertRaises(AssertionError):
             net.set_nodes([])

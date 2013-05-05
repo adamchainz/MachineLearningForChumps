@@ -9,9 +9,6 @@ class HopfieldNet(object):
         self.biases = numpy.zeros(num_nodes, dtype=numpy.int8)
         self.weights = numpy.zeros(num_nodes * num_nodes, dtype=numpy.int8)
 
-    def get_node(self, which):
-        return self.nodes[which]
-
     def set_node(self, which, state):
         self.nodes[which] = state
 
