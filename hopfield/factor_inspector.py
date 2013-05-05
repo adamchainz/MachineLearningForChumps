@@ -1,5 +1,4 @@
 # coding=utf-8
-import numpy
 from storage import HopfieldStorageNet
 from settler import HopfieldSettler
 
@@ -8,7 +7,7 @@ from utils import random_binary_array
 
 class HopfieldFactorFinder(object):
 
-    def __init__(self, num_nodes, num_samples=10, start=10, stop=20, step=1):
+    def __init__(self, num_nodes, num_samples=10, start=10, stop=30, step=1):
         self.num_nodes = num_nodes
         self.num_samples = num_samples
 
@@ -45,7 +44,7 @@ class HopfieldFactorFinder(object):
         return all_nums
 
     def get_percentage(self, num):
-        return (100.0 * float(num)) / self.num_nodes
+        return (100.0 * num) / self.num_nodes
 
     def run_for(self, num_memories):
         inspector = HopfieldFactorInspector(self.num_nodes,
@@ -62,10 +61,12 @@ class HopfieldFactorInspector(object):
         self.num_samples = num_samples
 
     def inspect(self):
-        results = numpy.zeros(self.num_samples, dtype=numpy.float)
+        num_successes = 0.0
         for i in xrange(self.num_samples):
-            results[i] = self.inspect_once()
-        return int(numpy.mean(results))
+            result = self.inspect_once()
+            if result:
+                num_successes += 1
+        return (num_successes * 100.0) / self.num_samples
 
     def inspect_once(self):
         memories = self.generate_random_memories()
@@ -79,8 +80,7 @@ class HopfieldFactorInspector(object):
             if (net.get_nodes() == memory).all():
                 num_hits += 1
 
-        percent_retrievable = (float(num_hits) / self.num_memories) * 100.0
-        return percent_retrievable
+        return num_hits == self.num_memories
 
     def generate_random_memories(self):
         return [
@@ -96,4 +96,4 @@ class HopfieldFactorInspector(object):
 
 
 if __name__ == '__main__':
-    HopfieldFactorFinder(40).run()
+    HopfieldFactorFinder(100).run()
