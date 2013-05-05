@@ -19,13 +19,13 @@ class HopfieldNetTests(HopfieldTestCase):
         net = HopfieldNet(num_nodes=2)
         self.assertEqual(net.nodes[0], False)
 
-        net.set_node(0, True)
+        net.nodes[0] = True
         self.assertEqual(net.nodes[0], True)
-        net.set_node(0, True)
+        net.nodes[0] = True
 
-        net.set_node(0, False)
+        net.nodes[0] = False
         self.assertEqual(net.nodes[0], False)
-        net.set_node(0, False)
+        net.nodes[0] = False
 
     def test_node_bias_setting(self):
         net = HopfieldNet(num_nodes=2)
@@ -54,15 +54,15 @@ class HopfieldNetTests(HopfieldTestCase):
         net = HopfieldNet(num_nodes=3)
         net.set_weight(0, 1, weight=3)
         net.set_weight(0, 2, weight=-1)
-        net.set_node(1, True)
-        net.set_node(2, False)
+        net.nodes[1] = True
+        net.nodes[2] = False
 
         self.assertEqual(net.get_node_energy_gap(0), 3)
 
-        net.set_node(0, True)
+        net.nodes[0] = True
         self.assertEqual(net.get_node_energy_gap(0), 3)
 
-        net.set_node(1, False)
+        net.nodes[1] = False
         self.assertEqual(net.get_node_energy_gap(0), 0)
 
         net.set_node_bias(0, -5)

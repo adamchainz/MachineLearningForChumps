@@ -15,7 +15,7 @@ class HopfieldNet(object):
     def set_nodes(self, states):
         assert len(states) == self.num_nodes
         for i, state in enumerate(states):
-            self.set_node(i, state)
+            self.nodes[i] = state
 
     def get_nodes(self):
         return self.nodes

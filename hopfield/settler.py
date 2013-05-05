@@ -26,7 +26,7 @@ class HopfieldSettler(object):
         i = random.randint(0, len(updatable) - 1)
         which = updatable[i]
         state = self.get_node_desired_state(which)
-        self.net.set_node(which, state)
+        self.net.nodes[which] = state
 
     def could_update_node(self, which):
         return self.get_node_desired_state(which) != self.net.nodes[which]
