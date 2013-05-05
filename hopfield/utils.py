@@ -10,6 +10,10 @@ def binary_array(ones_zeros):
     return array
 
 
+def random_binary_array(length):
+    return numpy.random.random_integers(0, 1, length)
+
+
 def string_to_binary_array(string):
     return binary_array(
         ''.join([bin(ord(i))[2:].rjust(8, '0')
