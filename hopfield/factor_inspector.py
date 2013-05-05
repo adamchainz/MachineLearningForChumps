@@ -25,7 +25,7 @@ class HopfieldFactorFinder(object):
             results[num] = self.run_for(num)
 
         for num, percent_retrievable in results.iteritems():
-            print "With {} memories ({}%) - got {}% retrieval" \
+            print "With {} memories ({:0.1f}%) - got {:0.1f}% retrieval" \
                   .format(
                       num,
                       self.get_percentage(num),
@@ -96,4 +96,4 @@ class HopfieldFactorInspector(object):
 
 
 if __name__ == '__main__':
-    HopfieldFactorFinder(100).run()
+    HopfieldFactorFinder(20).run()
