@@ -29,7 +29,7 @@ class HopfieldSettler(object):
         self.net.set_node(which, state)
 
     def could_update_node(self, which):
-        return self.get_node_desired_state(which) != self.net.get_node(which)
+        return self.get_node_desired_state(which) != self.net.nodes[which]
 
     def get_node_desired_state(self, which):
         energy_gap = self.net.get_node_energy_gap(which)

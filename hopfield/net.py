@@ -10,7 +10,7 @@ class HopfieldNet(object):
         self.weights = numpy.zeros(num_nodes * num_nodes, dtype=numpy.int8)
 
     def get_node(self, which):
-        return bool(self.nodes[which])
+        return self.nodes[which]
 
     def set_node(self, which, state):
         self.nodes[which] = state
@@ -21,7 +21,7 @@ class HopfieldNet(object):
             self.set_node(i, state)
 
     def get_nodes(self):
-        return [self.get_node(i) for i in xrange(self.num_nodes)]
+        return self.nodes
 
     def get_node_bias(self, which):
         return self.biases[which]
@@ -43,17 +43,13 @@ class HopfieldNet(object):
 
     def get_node_energy_gap(self, which):
         return (
-            self.get_node_bias(which) +
+            self.biases[which] +
             sum([
-                self.get_node(other) * self.get_weight(which, other)
-                for other in self._get_all_nodes_except(which)
+                self.nodes[other] * self.get_weight(which, other)
+                for other in xrange(self.num_nodes)
+                if other != which
                 ])
         )
-
-    def _get_all_nodes_except(self, which):
-        for i in xrange(self.num_nodes):
-            if i != which:
-                yield i
 
     def get_total_energy(self):
         return -1 * sum(
@@ -62,9 +58,11 @@ class HopfieldNet(object):
         )
 
     def get_weight_state(self, i, j):
-        return self.get_weight(i, j) * self.get_node(i) * self.get_node(j)
+        if i > j:
+            i, j = j, i
+        return self.weights[j * self.num_nodes + i] * self.nodes[i] * self.nodes[j]
 
     def all_pairs(self):
         for i in xrange(self.num_nodes):
-            for j in xrange(0, i):
+            for j in xrange(i):
                 yield (i, j)
