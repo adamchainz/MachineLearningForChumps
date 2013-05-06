@@ -8,25 +8,23 @@ class HopfieldSettler(object):
 
     def settle(self):
         while True:
-            updatable = self.find_updatable()
+            updated = self.maybe_update()
+            if not updated:
+                break
 
-            if len(updatable) == 0:
-                return
-            else:
-                self.update_one_of(updatable)
-
-    def find_updatable(self):
-        updatable = []
-        for which in xrange(self.net.num_nodes):
-            if self.could_update_node(which):
-                updatable.append(which)
-        return updatable
-
-    def update_one_of(self, updatable):
-        i = random.randint(0, len(updatable) - 1)
-        which = updatable[i]
-        state = self.get_node_desired_state(which)
-        self.net.nodes[which] = state
+    def maybe_update(self):
+        """
+        Loop over all nodes in a random order - find the first updatable one
+        and update it and return True. If there are no updatable nodes,
+        return False.
+        """
+        all_nodes = range(self.net.num_nodes)
+        random.shuffle(all_nodes)
+        for node in all_nodes:
+            if self.could_update_node(node):
+                self.net.nodes[node] = (self.net.nodes[node] + 1) % 2
+                return True
+        return False
 
     def could_update_node(self, which):
         return self.get_node_desired_state(which) != self.net.nodes[which]

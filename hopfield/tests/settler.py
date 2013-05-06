@@ -8,11 +8,6 @@ from mocking import make_net_from_lecture_slides
 
 class HopfieldSettlerTests(HopfieldTestCase):
 
-    def test_find_updatable(self):
-        net = make_net_from_lecture_slides()
-        updatable = HopfieldSettler(net).find_updatable()
-        self.assertItemsEqual(updatable, [3, 4])
-
     def test_finding_deep_minimum(self):
         net = make_net_from_lecture_slides()
 
