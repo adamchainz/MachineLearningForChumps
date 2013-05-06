@@ -1,5 +1,7 @@
+#!/usr/bin/python
 # coding=utf-8
 import multiprocessing
+import sys
 
 from storage import HopfieldStorageNet
 from settler import HopfieldSettler
@@ -24,19 +26,18 @@ class HopfieldFactorFinder(object):
 
         results = self.run_all()
 
-        for num, percent_retrievable in results.iteritems():
-            print "With {} memories ({:0.1f}%) - got {:0.1f}% retrieval" \
-                  .format(
-                      num,
-                      self.get_percentage(num),
-                      percent_retrievable
-                  )
+        self.print_results(results)
 
     def run_all(self):
         specs = [(self.num_nodes, self.num_samples,num_memories)
                  for num_memories in self.all_num_memories()]
         pool = multiprocessing.Pool()
-        results = pool.map(run_for, specs)
+        try:
+            results = pool.map_async(run_for, specs)\
+                          .get(9999999999)  # use a long timeout for Ctrl-C
+        except KeyboardInterrupt:
+            print "\nKilled."
+            sys.exit()
         results = dict(zip(self.all_num_memories(), results))
         return results
 
@@ -51,16 +52,28 @@ class HopfieldFactorFinder(object):
 
         return all_nums
 
+    def print_results(self, results):
+        for num, percent_retrievable in results.iteritems():
+            print "With {} memories ({:0.1f}%) - got {:0.1f}% retrieval" \
+                  .format(
+                      num,
+                      self.get_percentage(num),
+                      percent_retrievable
+                  )
+
     def get_percentage(self, num):
         return (100.0 * num) / self.num_nodes
 
 
 def run_for(args):
     num_nodes, num_samples, num_memories = args
-    inspector = HopfieldFactorInspector(num_nodes,
-                                        num_memories,
-                                        num_samples=num_samples)
-    return inspector.inspect()
+    try:
+        inspector = HopfieldFactorInspector(num_nodes,
+                                            num_memories,
+                                            num_samples=num_samples)
+        return inspector.inspect()
+    except KeyboardInterrupt:
+        pass
 
 
 class HopfieldFactorInspector(object):
@@ -108,17 +121,27 @@ class HopfieldFactorInspector(object):
 if __name__ == '__main__':
     from optparse import OptionParser
     parser = OptionParser()
+    parser.set_usage("Tries to demonstrate the Hopfield limitation factor (that you can store max 0.15N memories in an N-node network) experimentally.")
     parser.add_option('-n',
                       '--num-nodes',
                       dest='num_nodes',
                       help='How many nodes to use in the hopfield network',
-                      type='int',
-                      default=20)
+                      type='int')
     parser.add_option('-s',
                       '--num-samples',
                       dest='num_samples',
                       help='How many times to sample each percentage',
-                      type='int',
-                      default=10)
+                      type='int')
+    parser.add_option('-f',
+                      '--from',
+                      dest='start',
+                      help='What percentage to start at',
+                      type='int')
+    parser.add_option('-t',
+                      '--to',
+                      dest='stop',
+                      help='What percentage to stop at',
+                      type='int')
+    parser.set_defaults(num_nodes=20, num_samples=10, start=1, stop=20)
     (options, args) = parser.parse_args()
     HopfieldFactorFinder(**options.__dict__).run()
