@@ -1,4 +1,4 @@
-# Machine Learning for Nincompoops
+# Machine Learning for Chumps
 
 I'm learning some machine learning techinques, using material from <https://www.coursera.org/course/neuralnets> especially.
 
