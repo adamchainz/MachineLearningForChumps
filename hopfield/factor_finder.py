@@ -1,4 +1,6 @@
 # coding=utf-8
+import multiprocessing
+
 from storage import HopfieldStorageNet
 from settler import HopfieldSettler
 
@@ -7,7 +9,7 @@ from utils import random_binary_array
 
 class HopfieldFactorFinder(object):
 
-    def __init__(self, num_nodes, num_samples, start=10, stop=30, step=1):
+    def __init__(self, num_nodes, num_samples, start=1, stop=20, step=1):
         self.num_nodes = num_nodes
         self.num_samples = num_samples
 
@@ -20,9 +22,7 @@ class HopfieldFactorFinder(object):
         print "Running with {} nodes, trying from {}% to {}% memories and {} samples" \
               .format(self.num_nodes, self.start, self.stop, self.num_samples)
 
-        results = {}
-        for num in self.all_num_memories():
-            results[num] = self.run_for(num)
+        results = self.run_all()
 
         for num, percent_retrievable in results.iteritems():
             print "With {} memories ({:0.1f}%) - got {:0.1f}% retrieval" \
@@ -31,6 +31,14 @@ class HopfieldFactorFinder(object):
                       self.get_percentage(num),
                       percent_retrievable
                   )
+
+    def run_all(self):
+        specs = [(self.num_nodes, self.num_samples,num_memories)
+                 for num_memories in self.all_num_memories()]
+        pool = multiprocessing.Pool()
+        results = pool.map(run_for, specs)
+        results = dict(zip(self.all_num_memories(), results))
+        return results
 
     def all_num_memories(self):
         last = -1
@@ -46,11 +54,13 @@ class HopfieldFactorFinder(object):
     def get_percentage(self, num):
         return (100.0 * num) / self.num_nodes
 
-    def run_for(self, num_memories):
-        inspector = HopfieldFactorInspector(self.num_nodes,
-                                            num_memories,
-                                            num_samples=self.num_samples)
-        return inspector.inspect()
+
+def run_for(args):
+    num_nodes, num_samples, num_memories = args
+    inspector = HopfieldFactorInspector(num_nodes,
+                                        num_memories,
+                                        num_samples=num_samples)
+    return inspector.inspect()
 
 
 class HopfieldFactorInspector(object):
