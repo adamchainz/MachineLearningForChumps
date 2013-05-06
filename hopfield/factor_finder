@@ -119,29 +119,30 @@ class HopfieldFactorInspector(object):
 
 
 if __name__ == '__main__':
-    from optparse import OptionParser
-    parser = OptionParser()
-    parser.set_usage("Tries to demonstrate the Hopfield limitation factor (that you can store max 0.15N memories in an N-node network) experimentally.")
-    parser.add_option('-n',
-                      '--num-nodes',
-                      dest='num_nodes',
-                      help='How many nodes to use in the hopfield network',
-                      type='int')
-    parser.add_option('-s',
-                      '--num-samples',
-                      dest='num_samples',
-                      help='How many times to sample each percentage',
-                      type='int')
-    parser.add_option('-f',
-                      '--from',
-                      dest='start',
-                      help='What percentage to start at',
-                      type='int')
-    parser.add_option('-t',
-                      '--to',
-                      dest='stop',
-                      help='What percentage to stop at',
-                      type='int')
+    from argparse import ArgumentParser
+    parser = ArgumentParser(
+        description="Tries to demonstrate the Hopfield limitation factor (that you can store max 0.15N memories in an N-node network) experimentally."
+    )
+    parser.add_argument('-n',
+                        '--num-nodes',
+                        dest='num_nodes',
+                        help='How many nodes to use in the hopfield network',
+                        type=int)
+    parser.add_argument('-s',
+                        '--num-samples',
+                        dest='num_samples',
+                        help='How many times to sample each percentage',
+                        type=int)
+    parser.add_argument('-f',
+                        '--from',
+                        dest='start',
+                        help='What percentage to start at',
+                        type=int)
+    parser.add_argument('-t',
+                        '--to',
+                        dest='stop',
+                        help='What percentage to stop at',
+                        type=int)
     parser.set_defaults(num_nodes=20, num_samples=10, start=1, stop=20)
-    (options, args) = parser.parse_args()
-    HopfieldFactorFinder(**options.__dict__).run()
+    args = parser.parse_args()
+    HopfieldFactorFinder(**args.__dict__).run()
