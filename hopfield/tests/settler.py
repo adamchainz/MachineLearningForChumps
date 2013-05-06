@@ -11,7 +11,8 @@ class HopfieldSettlerTests(HopfieldTestCase):
     def test_finding_deep_minimum(self):
         net = make_net_from_lecture_slides()
 
-        net.set_nodes([False, True, False, True, True])
+        net.set_nodes(binary_array('01010'))
+        self.assertEqual(net.get_total_energy(), -3)
         HopfieldSettler(net).settle()
         self.assertEqual(net.get_total_energy(), -5)
         self.assertArrayEqual(net.get_nodes(), binary_array('01011'))
